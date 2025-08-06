@@ -1,9 +1,3 @@
-def parse_input(user_input):
-    cmd, *args = user_input.strip().split()
-    cmd = cmd.lower()
-    return cmd, *args
-
-
 def input_error(func):
     def wrapper(*args, **kwargs):
         try:
@@ -14,7 +8,15 @@ def input_error(func):
             return "Give me name and phone please"
         except IndexError:
             return "Give me the correct number of arguments"
+
     return wrapper
+
+
+@input_error
+def parse_input(user_input):
+    cmd, *args = user_input.strip().split()
+    cmd = cmd.lower()
+    return cmd, *args
 
 
 @input_error
@@ -32,7 +34,8 @@ def change_contact(args, contacts):
 
 
 @input_error
-def show_phone(name, contacts):
+def show_phone(args, contacts):
+    name = args[0]
     return contacts[name]
 
 
@@ -44,7 +47,12 @@ def main():
     contacts = {}
     print("Welcome to the assistant bot!")
     while True:
-        user_input = input("Enter a command: ")
+        user_input = input("Enter a command: ").strip()
+
+        if not user_input:
+            print("Please enter a command.")
+            continue
+
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
@@ -57,7 +65,7 @@ def main():
         elif command == "change":
             print(change_contact(args, contacts))
         elif command == "phone":
-            print(show_phone(args[0], contacts))
+            print(show_phone(args, contacts))
         elif command == "all":
             print(show_all(contacts))
         else:
