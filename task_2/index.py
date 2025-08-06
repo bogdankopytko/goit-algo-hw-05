@@ -4,7 +4,7 @@ from typing import Callable, Generator
 
 def generator_numbers(txt: str) -> Generator[float, None, None]:
 
-    float_pattern = r'-?\d+(?:\.\d+)?'
+    float_pattern = r'(?<=\s)-?\d+(?:\.\d+)?(?=\s)'
     matches = re.finditer(float_pattern, txt)
     for match in matches:
         yield float(match.group())
